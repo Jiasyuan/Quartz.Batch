@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using log4net;
-using log4net.Config;
+﻿using log4net;
+using Topshelf;
+using Topshelf.Autofac;
 
 namespace Quartz.Batch.WinService
 {
@@ -16,6 +11,24 @@ namespace Quartz.Batch.WinService
         static void Main(string[] args)
         {
             txtLog.Info("Batch.WinService Running");
+            var container = Bootstrapper.BuildContainer();
+            var rc = HostFactory.Run(x =>
+            {
+                x.UseAutofacContainer(container);
+                x.Service<SchedulerService>(s =>
+                {
+                    s.ConstructUsingAutofacContainer();
+                    s.WhenStarted(tc => tc.Start());
+                    s.WhenStopped(tc => tc.Stop());
+                });
+                x.SetDescription("Sample Quartz.Batch.WinService");
+                x.SetDisplayName("Quartz.Batch.WinService");
+                x.SetServiceName("Quartz.Batch.WinService");
+                x.RunAsLocalSystem();
+                x.StartAutomatically();
+            });
+
+            
 
         }
     }
