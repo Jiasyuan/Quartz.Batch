@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Routing;
+﻿using System.Web.Http;
+using Quartz.Batch.Service.Jobs;
 
 namespace Quartz.Batch.Service
 {
@@ -12,6 +8,7 @@ namespace Quartz.Batch.Service
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            JobScheduler.Start();
         }
     }
 }
